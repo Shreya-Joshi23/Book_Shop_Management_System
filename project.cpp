@@ -4,7 +4,7 @@ using namespace std;
 int ascii = 178;
 char ch = ascii;
 
-// MENU
+// This is main menu of my Book management system.
 class menu
 {
 public:
@@ -44,7 +44,7 @@ void menu::bookmenu()
     {
         cout << ch;
     }
-    cout<<endl;
+    cout << endl;
     cout << "1.New entry\n"
          << "2.Search entry\n"
          << "3.Update entry\n"
@@ -94,11 +94,11 @@ void book::inputdetails()
         cin >> book.author;
         cout << "Enter book price";
         cin >> book.price;
-        cout<<"Enter the number of copies";
-        cin>>book.copies;
+        cout << "Enter the number of copies";
+        cin >> book.copies;
 
-        ofp.write((char *)&book,sizeof(Bookdata));
-        cout<<"Book added to bookstore.....";
+        ofp.write((char *)&book, sizeof(Bookdata));
+        cout << "Book added to bookstore.....";
         cin.get();
         cin.get();
         ofp.close();
@@ -127,7 +127,7 @@ void book::searchdetails()
 
     while (file.read((char *)&book, sizeof(Bookdata)))
     {
-        if (strcmp(book.title,title) == 0)
+        if (strcmp(book.title, title) == 0)
         {
             cout << "Book found in the bookshop" << endl;
             cout << "Book title:" << book.title << endl;
@@ -146,48 +146,55 @@ void book::searchdetails()
     return;
 }
 
-void book::updatedetails(){
+void book::updatedetails()
+{
     system("cls");
     fstream file;
     Bookdata book;
-    bool flag=0;
+    bool flag = 0;
 
-    file.open("bookdatabase.bin",ios::in|ios::binary|ios::out|ios::ate);
-    file.seekg(0,ios::beg);
+    file.open("bookdatabase.bin", ios::in | ios::binary | ios::out | ios::ate);
+    file.seekg(0, ios::beg);
 
-    if(!file){
-        cout<<"Unable to open the file";
+    if (!file)
+    {
+        cout << "Unable to open the file";
     }
-    else{
-        cout<<"Enter the title of the book you want to update";
+    else
+    {
+        cout << "Enter the title of the book you want to update";
         char title[25];
-        cin>>title;
-        while(file.read((char*)&book,sizeof(Bookdata))){
-            if(strcmp(book.title,title)==0){
-                int position=(-1)*sizeof(Bookdata);
-                file.seekp(position,ios::cur);
-                cout<<"Enter new book id"<<endl;
-                cin>>book.bookid;
-                cout<<"Enter new book title"<<endl;
-                cin>>book.title;
-                cout<<"Enter new book author"<<endl;
-                cin>>book.author;
-                cout<<"Enter new book price"<<endl;
-                cin>>book.price;
-                cout<<"Enter new number of copies"<<endl;
-                cin>>book.copies;
-                flag=1;
-                file.write((char*)&book,sizeof(Bookdata));
+        cin >> title;
+        while (file.read((char *)&book, sizeof(Bookdata)))
+        {
+            if (strcmp(book.title, title) == 0)
+            {
+                int position = (-1) * sizeof(Bookdata);
+                file.seekp(position, ios::cur);
+                cout << "Enter new book id" << endl;
+                cin >> book.bookid;
+                cout << "Enter new book title" << endl;
+                cin >> book.title;
+                cout << "Enter new book author" << endl;
+                cin >> book.author;
+                cout << "Enter new book price" << endl;
+                cin >> book.price;
+                cout << "Enter new number of copies" << endl;
+                cin >> book.copies;
+                flag = 1;
+                file.write((char *)&book, sizeof(Bookdata));
             }
         }
 
-        if(flag==1){
-            cout<<"Record successfully updated";
+        if (flag == 1)
+        {
+            cout << "Record successfully updated";
             cin.get();
             cin.get();
         }
-        else{
-            cout<<"Record not found";
+        else
+        {
+            cout << "Record not found";
             cin.get();
             cin.get();
         }
@@ -207,7 +214,7 @@ void book::deletedetails()
     cout << "Enter the title of the book you want to delete";
     cin >> title;
 
-    while (file.read((char *)&book,sizeof(Bookdata)))
+    while (file.read((char *)&book, sizeof(Bookdata)))
     {
         if (strcmp(book.title, title) == 0)
         {
@@ -243,9 +250,9 @@ void book::viewallbookdetails()
     fstream file;
     file.open("bookdatabase.bin", ios::in | ios::binary);
     Bookdata book;
-    int choice=1;
+    int choice = 1;
 
-    while (file.read((char *)&book, sizeof(Bookdata))&& choice)
+    while (file.read((char *)&book, sizeof(Bookdata)) && choice)
     {
         system("cls");
         cout << "Book id:" << book.bookid << endl;
@@ -267,9 +274,9 @@ void menu::issuebook()
 
     Bookdata book;
     fstream file;
-    bool flag=0;
-    file.open("bookdatabase.bin",ios::in|ios::out|ios::binary|ios::ate);
-    file.seekg(0,ios::beg);
+    bool flag = 0;
+    file.open("bookdatabase.bin", ios::in | ios::out | ios::binary | ios::ate);
+    file.seekg(0, ios::beg);
 
     char title[25];
     int copies;
@@ -279,41 +286,46 @@ void menu::issuebook()
     cout << "Enter the number of book you want to buy";
     cin >> copies;
 
-    while(file.read((char*)&book,sizeof(Bookdata))){
-        if(strcmp(book.title,title)==0){
+    while (file.read((char *)&book, sizeof(Bookdata)))
+    {
+        if (strcmp(book.title, title) == 0)
+        {
 
-            int position=(-1)*sizeof(Bookdata);
-            file.seekp(position,ios::cur);
+            int position = (-1) * sizeof(Bookdata);
+            file.seekp(position, ios::cur);
 
-            if(book.copies>=copies){
-                book.copies-=copies;
-                price=book.price*copies;
-                file.write((char*)&book,sizeof(Bookdata));
+            if (book.copies >= copies)
+            {
+                book.copies -= copies;
+                price = book.price * copies;
+                file.write((char *)&book, sizeof(Bookdata));
                 return;
             }
-            else if(book.copies<copies || book.copies==0){
-                cout<<"Do not have sufficient copies of book";
+            else if (book.copies < copies || book.copies == 0)
+            {
+                cout << "Do not have sufficient copies of book";
                 cin.get();
                 cin.get();
                 return;
             }
-            flag=1;
+            flag = 1;
         }
     }
 
-    if(flag==1){
-    cout<<"Book bought at price:"<<price;
-    cin.get();
-    cin.get();
+    if (flag == 1)
+    {
+        cout << "Book bought at price:" << price;
+        cin.get();
+        cin.get();
     }
-    else{
-    cout<<"Book not found in the bookstore...";
-    cin.get();
-    cin.get();
+    else
+    {
+        cout << "Book not found in the bookstore...";
+        cin.get();
+        cin.get();
     }
 
     return;
-
 }
 
 int main()
